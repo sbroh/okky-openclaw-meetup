@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OKKY 오픈클로 실험실 #1</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #7C3AED;
+      --primary-light: #A78BFA;
+      --accent: #F59E0B;
+      --bg: #0F0F1A;
+      --bg2: #16162A;
+      --bg3: #1E1E35;
+      --text: #E2E8F0;
+      --text-muted: #94A3B8;
+      --border: #2D2D4E;
+      --red: #EF4444;
+      --green: #10B981;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #0F0F1A 0%, #1a0a2e 50%, #0d1a2e 100%);
+      padding: 80px 24px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(167,139,250,0.4);
+      color: var(--primary-light);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #A78BFA, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--text-muted);
+      margin-top: 16px;
+      margin-bottom: 40px;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 0 40px rgba(124,58,237,0.4);
+    }
+    .hero-cta:hover {
+      background: #6D28D9;
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(124,58,237,0.5);
+    }
+    .hero-meta {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .hero-meta-item span.icon { font-size: 18px; }
+
+    /* ── PAIN SECTION ── */
+    .pain-section {
+      background: var(--bg2);
+      padding: 72px 24px;
+    }
+    .container { max-width: 780px; margin: 0 auto; }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 32px;
+    }
+    .pain-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .pain-list li {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      font-size: 16px;
+    }
+    .pain-list li .emoji { font-size: 22px; flex-shrink: 0; }
+    .pain-answer {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05));
+      border: 1px solid rgba(124,58,237,0.35);
+      border-radius: 14px;
+      padding: 28px 28px;
+    }
+    .pain-answer p { font-size: 17px; line-height: 1.8; }
+    .pain-answer strong { color: var(--primary-light); }
+
+    /* ── WHAT SECTION ── */
+    .what-section { padding: 72px 24px; }
+    .what-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .what-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .what-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
+    .what-card .card-icon { font-size: 28px; margin-bottom: 12px; }
+    .what-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .what-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── PRINCIPLES ── */
+    .principles-section {
+      background: var(--bg2);
+      padding: 72px 24px;
+    }
+    .principles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    @media (max-width: 520px) { .principles-grid { grid-template-columns: 1fr; } }
+    .principle-card {
+      border-radius: 14px;
+      padding: 24px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .principle-card.no {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+    .principle-card.yes {
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+    .principle-card .badge {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .principle-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .principle-card.no h4 { color: #F87171; }
+    .principle-card.yes h4 { color: #34D399; }
+    .principle-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .principle-card ul li { font-size: 15px; }
+
+    /* ── PROGRAM ── */
+    .program-section { padding: 72px 24px; }
+    .timeline {
+      margin-top: 32px;
+      position: relative;
+      padding-left: 28px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), transparent);
+      border-radius: 2px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 6px;
+      width: 12px; height: 12px;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(124,58,237,0.6);
+    }
+    .timeline-item h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .timeline-item p { font-size: 14px; color: var(--text-muted); }
+
+    /* ── HOW TO JOIN ── */
+    .join-section {
+      background: var(--bg2);
+      padding: 72px 24px;
+    }
+    .join-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 32px;
+    }
+    @media (max-width: 560px) { .join-cards { grid-template-columns: 1fr; } }
+    .join-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+    }
+    .join-card.featured {
+      border-color: var(--primary);
+      box-shadow: 0 0 30px rgba(124,58,237,0.2);
+    }
+    .join-card .join-type {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .join-card.featured .join-type { color: var(--primary-light); }
+    .join-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .join-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .join-card .slots {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(245,158,11,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(245,158,11,0.3);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    /* ── EXAMPLES ── */
+    .examples-section { padding: 72px 24px; }
+    .example-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .tag {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 14px;
+      color: var(--text);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .tag:hover {
+      border-color: var(--primary-light);
+      background: rgba(124,58,237,0.1);
+    }
+    .note {
+      margin-top: 24px;
+      padding: 18px 22px;
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 12px;
+      font-size: 15px;
+      color: #FCD34D;
+    }
+
+    /* ── WHO ── */
+    .who-section {
+      background: var(--bg2);
+      padding: 72px 24px;
+    }
+    .who-list {
+      list-style: none;
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .who-list li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 16px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .who-list li .icon { font-size: 20px; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 100px 24px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg) 0%, #1a0a2e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 100%, rgba(124,58,237,0.3) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: clamp(26px, 5vw, 42px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    .cta-section p { font-size: 17px; color: var(--text-muted); margin-bottom: 40px; }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 18px 48px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 0 50px rgba(124,58,237,0.45);
+    }
+    .cta-btn:hover {
+      background: #6D28D9;
+      transform: translateY(-3px);
+      box-shadow: 0 0 70px rgba(124,58,237,0.55);
+    }
+    .cta-note { margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    footer a { color: var(--primary-light); text-decoration: none; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">🧪 OKKY × 오픈클로 실험실 · 첫 번째 실험</div>
+    <h1>
+      <em>OKKY 오픈클로 실험실 #1</em><br>
+      삽질 / 환경 / 스택<br>전부 까보는 날
+    </h1>
+    <p class="hero-sub">성공 사례 말고, 망한 얘기 들으러 옵니다</p>
+    <a href="#apply" class="hero-cta">지금 신청하기 →</a>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="icon">📍</span> 장소 추후 공지</div>
+      <div class="hero-meta-item"><span class="icon">⏱️</span> 2시간 (소규모 20명 이내)</div>
+      <div class="hero-meta-item"><span class="icon">🎤</span> 발표자 선착순 5명</div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- PAIN -->
+<section class="pain-section">
+  <div class="container">
+    <div class="section-label">공감하시나요?</div>
+    <h2 class="section-title">요즘 이런 말 많이 듣죠?<br>"오픈클로 써야 한다"</h2>
+    <ul class="pain-list">
+      <li><span class="emoji">😵</span> 뭐부터 해야 할지 모르겠고</li>
+      <li><span class="emoji">😤</span> 해보면 성능이 애매하고</li>
+      <li><span class="emoji">💥</span> GPU는 터지고</li>
+      <li><span class="emoji">😅</span> 결국 GPT로 돌아감</li>
+    </ul>
+    <div class="pain-answer">
+      <p>그래서 준비했습니다.<br>
+      <strong>잘 만든 사례? 성공 사례?</strong><br>
+      ❌ 필요 없습니다.<br><br>
+      <strong>망한 얘기, 삽질, 실제 사용하는 환경</strong> — 이걸 듣고 싶습니다.</p>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- WHAT -->
+<section class="what-section">
+  <div class="container">
+    <div class="section-label">이번 밋업에서 나눌 이야기</div>
+    <h2 class="section-title">🧪 우리가 함께 까보는 것들</h2>
+    <div class="what-grid">
+      <div class="what-card">
+        <div class="card-icon">💣</div>
+        <h3>삽질 경험</h3>
+        <p>오픈클로 쓰다 망한 이야기, 대환영합니다</p>
+      </div>
+      <div class="what-card">
+        <div class="card-icon">🖥️</div>
+        <h3>환경</h3>
+        <p>나는 어떤 환경에서 돌리고 있는지</p>
+      </div>
+      <div class="what-card">
+        <div class="card-icon">🧠</div>
+        <h3>모델 / 스택</h3>
+        <p>어떤 모델 쓰고, 어떤 스택 구성했는지</p>
+      </div>
+      <div class="what-card">
+        <div class="card-icon">⚙️</div>
+        <h3>실사용</h3>
+        <p>실제로 어디에 어떻게 쓰고 있는지</p>
+      </div>
+      <div class="what-card">
+        <div class="card-icon">💸</div>
+        <h3>비용 / 성능 / 한계</h3>
+        <p>쓸수록 느끼는 현실적인 한계</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- PRINCIPLES -->
+<section class="principles-section">
+  <div class="container">
+    <div class="section-label">중요한 원칙</div>
+    <h2 class="section-title">⚠️ 이 밋업의 룰</h2>
+    <div class="principles-grid">
+      <div class="principle-card no">
+        <div class="badge">❌</div>
+        <div>
+          <h4>안 됩니다</h4>
+          <ul>
+            <li>잘난 이야기</li>
+            <li>광고 / 홍보</li>
+            <li>완성된 성공 사례 자랑</li>
+          </ul>
+        </div>
+      </div>
+      <div class="principle-card yes">
+        <div class="badge">✅</div>
+        <div>
+          <h4>환영합니다</h4>
+          <ul>
+            <li>실패 이야기</li>
+            <li>실사용 경험</li>
+            <li>솔직한 고민과 삽질</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- EXAMPLES -->
+<section class="examples-section">
+  <div class="container">
+    <div class="section-label">발표 주제 예시</div>
+    <h2 class="section-title">🎁 이런 내용이면 딱입니다</h2>
+    <div class="example-tags">
+      <span class="tag">"GPU 없이 돌려봤는데 이렇더라"</span>
+      <span class="tag">"RAG 붙였는데 생각보다 별로였던 이유"</span>
+      <span class="tag">"내가 쓰는 로컬 LLM 스택"</span>
+      <span class="tag">"회사에서 도입하려다 실패한 썰"</span>
+      <span class="tag">"Cursor + 오픈클로 조합 후기"</span>
+    </div>
+    <div class="note">
+      👉 완성도 중요하지 않습니다 &nbsp;|&nbsp; 솔직한 경험이면 충분합니다
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- PROGRAM -->
+<section class="program-section">
+  <div class="container">
+    <div class="section-label">행사 구성</div>
+    <h2 class="section-title">⏰ 2시간 프로그램</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>1부 · 참여자 공유</h4>
+        <p>5~6명 × 10분 — 삽질 / 환경 / 스택 발표</p>
+      </div>
+      <div class="timeline-item">
+        <h4>2부 · 자유 토론 Q&A</h4>
+        <p>발표 내용 기반 자유 질의응답 및 토론</p>
+      </div>
+      <div class="timeline-item">
+        <h4>3부 · 네트워킹</h4>
+        <p>비슷한 고민을 가진 사람들과 자유 네트워킹</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- HOW TO JOIN -->
+<section class="join-section">
+  <div class="container">
+    <div class="section-label">참여 방식</div>
+    <h2 class="section-title">🎤 듣기만 하는 자리가 아닙니다</h2>
+    <div class="join-cards">
+      <div class="join-card">
+        <div class="join-type">일반 참여</div>
+        <h3>🙋 청중으로 참가</h3>
+        <p>발표 듣고, 토론 참여하고, 네트워킹하면 됩니다. 오픈클로에 관심만 있어도 OK.</p>
+      </div>
+      <div class="join-card featured">
+        <div class="join-type">✨ 발표 참여 (추천)</div>
+        <h3>🎤 짧은 공유 발표</h3>
+        <p>5~10분 분량의 삽질 / 환경 / 스택 공유. 완성도 필요 없음. 경험만 있으면 됩니다.</p>
+        <span class="slots">⚡ 선착순 5명</span>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- WHO -->
+<section class="who-section">
+  <div class="container">
+    <div class="section-label">이런 분께 추천</div>
+    <h2 class="section-title">🧑‍🤝‍🧑 당신을 기다립니다</h2>
+    <ul class="who-list">
+      <li><span class="icon">🌱</span> 오픈클로 관심 있지만 아직 못 해본 분</li>
+      <li><span class="icon">🤔</span> 이미 해봤지만 "이게 맞나?" 싶은 분</li>
+      <li><span class="icon">💬</span> 나만의 환경 / 스택 공유하고 싶은 분</li>
+      <li><span class="icon">👀</span> 다른 사람들은 어떻게 쓰는지 궁금한 분</li>
+    </ul>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section" id="apply">
+  <div class="container">
+    <h2>OKKY 오픈클로 실험실,<br>첫 번째 실험에 참여해보세요</h2>
+    <p>10~20명 소규모 · 솔직한 경험 공유 · 실질적인 네트워킹</p>
+    <a href="#" class="cta-btn">신청 폼 작성하기 →</a>
+    <p class="cta-note">📌 일시 및 장소는 신청자에게 별도 안내 예정</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>주최: <a href="https://okky.kr" target="_blank">OKKY</a> &nbsp;·&nbsp; 문의: <a href="mailto:chris.roh@gmail.com">chris.roh@gmail.com</a></p>
+  <p style="margin-top:8px">© 2026 OKKY. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
